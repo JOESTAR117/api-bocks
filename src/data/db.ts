@@ -74,4 +74,34 @@ export class DB {
 	async listBooks() {
 		return [...this.#books.values()]
 	}
+
+	//Authors
+
+	async addAuthor(author: AuthorObject) {
+		this.#authors.set(author.id, author)
+		await this.save()
+		return author
+	}
+
+	async updateAuthor(authorId: string, updateData: Partial<AuthorObject>) {
+		const currentAuthor = (await this.#authors.get(authorId)) || {}
+		delete updateData.id
+		const newAuthor = { ...currentAuthor, ...updateData } as AuthorObject
+		this.#authors.set(authorId, newAuthor)
+		await this.save()
+		return newAuthor
+	}
+
+	async deleteAuthor(id: string) {
+		this.#authors.delete(id)
+		await this.save()
+	}
+
+	async listAuthors() {
+		return [...this.#authors.values()]
+	}
+
+	async getAuthor(id: string) {
+		return this.#authors.get(id)
+	}
 }
